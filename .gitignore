@@ -1,0 +1,17 @@
+# Files
+.env
+.env.*
+!.env.example
+node_modules/
+.venv/
+__pycache__/
+*.pyc
+.DS_Store
+Thumbs.db
+
+# Local artifacts
+*.log
+state.json
+st.json
+llm.json
+tool.json
