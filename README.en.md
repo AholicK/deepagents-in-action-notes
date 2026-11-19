@@ -1,6 +1,6 @@
 # DeepAgents in Action · Study Notes
 
-A complete record of following the [datawhalechina/deepagents-in-action](https://github.com/datawhalechina/deepagents-in-action) course, **pre01 + pre02**: environment setup, command breakdowns, troubleshooting, and trace bottleneck analysis.
+A complete record of following the [datawhalechina/deepagents-in-action](https://github.com/datawhalechina/deepagents-in-action) course, **pre01–pre02 + ch01–ch02**: environment setup, command breakdowns, troubleshooting, trace bottleneck analysis, and source-level verification of the three-layer architecture.
 
 > 中文版: [README.md](README.md)
 
@@ -13,7 +13,8 @@ A complete record of following the [datawhalechina/deepagents-in-action](https:/
 | Node / npm | 22.22.1 / **11.x** (apt ships 9.2.0, which has a bug — see pitfall #3) |
 | uv | 0.13.8 |
 | AgentSeek | 0.1.6 (scaffolding) / agentseek-api 0.2.3 (runtime) |
-| deepagents / langgraph | 0.7.8 / 1.2.14 |
+| deepagents / langchain / langgraph | 0.7.8 / 1.4.3 / 1.2.14 |
+| langchain-core / langchain-openai / langsmith | 1.6.7 / 1.6.7 / 0.14.4 |
 | Model | OpenAI-compatible endpoint + `deepseek-v4.1-flash` |
 | Search | Tavily (free tier) |
 | Tracing | LangSmith project `deepagents-course` |
@@ -26,6 +27,8 @@ A complete record of following the [datawhalechina/deepagents-in-action](https:/
 ├── notes/                            Chinese notes
 │   ├── pre01-agentseek-create.md
 │   ├── pre02-agentseek-skills.md
+│   ├── ch01-agent-harness.md         three-layer stack + source-level checks
+│   ├── ch02-quickstart.md            first agent + schema translation measured
 │   └── troubleshooting.md
 ├── notes-en/                         English notes
 ├── trace/
@@ -36,11 +39,22 @@ A complete record of following the [datawhalechina/deepagents-in-action](https:/
 └── assets/
 ```
 
+## Five hard findings from ch01–ch02 (measured, not quoted)
+
+| Finding | Evidence |
+|---|---|
+| `create_deep_agent()` returns **LangGraph's `CompiledStateGraph`** | `type(agent).__name__`; only 4 nodes in the graph |
+| Default binding is **8 tools**: 7 file tools + `task`, **no `execute`** | Spy model capturing `bind_tools` arguments |
+| Default system prompt is **exactly your sentence** (`"test"` → 4 chars received) | Spy model capturing `_generate` messages |
+| Adding `TodoListMiddleware` = **+1 tool, +1372 chars of system** | before/after: 4 → 1376 |
+| The three elements compile to JSON Schema; `Literal` → `enum` (hard lock) | `convert_to_openai_tool()` output |
+
 ## Outcomes
 
 - Completed **3 full deep-research runs**, producing 3 reports (11k–13k Chinese characters each, all with numbered citations)
 - LangSmith trace: **313.49 s / 46 LLM calls / 61 tool calls**
 - Found and fixed **2 genuine template defects** (state bloat, run status not reaped)
+- Source-verified **6 checkable claims** from ch01–ch02 against local 0.7.8 — **all consistent** (default model / default prompt / default tool count / middleware order / parameter count / why `execute` is absent)
 
 ## Four pitfalls at a glance
 

@@ -44,6 +44,115 @@ It is not "I got an agent running". It is that I built **three habits**:
 
 The course provides a path that works. The real skill is being able to locate which layer broke when it does not.
 
+## 6. Task 2 broke a bad habit: stop trusting, start printing
+
+ch01 contains one sentence I skimmed the first time: **"`create_deep_agent()` internally calls `create_agent()`, which finally executes on LangGraph."**
+
+It reads fine, so I believed it. This time I added two lines:
+
+```python
+print(type(agent).__name__)      # CompiledStateGraph
+print(list(agent.nodes.keys()))  # ['__start__', 'model', 'tools', 'PatchToolCallsMiddleware.before_agent']
+```
+
+**Two lines turned the chapter's central claim from "the docs say so" into "this is what I see".**
+
+`CompiledStateGraph` is a LangGraph class, not a Deep Agents class — the harness doesn't ship a runtime, it configures a graph and compiles it. And there are only 4 nodes: start, call model, run tools, patch arguments. **I expected the "three-layer architecture" to be a pile of code; underneath it's four nodes.**
+
+The reusable lesson: **any sentence of the form "internally calls X" can be verified in ten seconds with `type()` or `inspect.getsource()`.** Verify first, then keep reading — the ground feels solid.
+
+## 7. A docstring is not written for humans
+
+I used to think a docstring was a comment for colleagues; write it badly and nothing breaks.
+
+ch02 killed that idea. I fed the course's `calculate` into `convert_to_openai_tool()`:
+
+```python
+def calculate(expression: str) -> float:
+    """Evaluate a math expression and return the result.
+
+    Args:
+        expression: A math expression, e.g. "1 + 2 * 3".
+    """
+```
+
+↓
+
+```json
+{
+  "name": "calculate",
+  "description": "Evaluate a math expression and return the result.",
+  "parameters": {
+    "properties": {
+      "expression": {
+        "description": "A math expression, e.g. \"1 + 2 * 3\".",
+        "type": "string"
+      }
+    },
+    "required": ["expression"]
+  }
+}
+```
+
+**The model never sees the function body — only this JSON.** The first docstring line becomes "when to call me"; the `Args:` block becomes "what to put in each argument"; the annotation becomes `type`; the default becomes `default` and drops out of `required`.
+
+So what I dismissed as code hygiene is actually **writing the model's only spec sheet**. Write it vaguely and the model misuses the tool — while I blamed the model.
+
+The biggest surprise was `Literal`:
+
+```python
+topic: Literal["general","news","finance"] = "general"
+```
+
+It becomes `"enum": ["general","news","finance"]`. **That's a hard lock** — the model can only pick from those three, never `"tech"`. With `topic: str` there is no such protection.
+
+That reframed "constraining a model" for me: it isn't done by writing "only pick these three" in the prompt — it's done by **locking the schema**. The first relies on the model's discipline; the second is enforced by the interface.
+
+## 8. Defaults have a price tag
+
+ch02 says v0.7 made task planning opt-in so "short tasks don't pay a fixed cost for the planning tool and its prompt."
+
+I skimmed that too — then measured it:
+
+| | Without `TodoListMiddleware` | With it |
+|---|---|---|
+| Tool count | 8 | 9 (adds `write_todos`) |
+| System message | **4 chars** | **1376 chars** |
+
+**1372 extra characters, paid on every single request.**
+
+That gave me a concrete feel for "context has a cost". I used to think of cost as "tokens cost money"; now I think of it as: **every middleware and every tool charges a fixed context tax on every turn.** Short tasks don't need planning tools, so don't enable them.
+
+The same applies to "what you get by default". My measured default tools:
+
+```
+['ls', 'read_file', 'write_file', 'edit_file', 'delete', 'glob', 'grep', 'task']
+```
+
+Eight. And **no `execute`** — because the default `StateBackend` keeps files in state and cannot run commands. That explains an old confusion of mine: why some tutorials' agents run code and mine didn't. **Nothing was misconfigured; the backend simply doesn't support it.**
+
+## 9. One thing I deliberately did not do
+
+I **did not run the full Hello World**, and did not wire up Tavily.
+
+Not laziness — I wanted to test a hypothesis: **can I learn exactly what the model receives without spending a cent or sending a single request?**
+
+Yes. Write a "spy model": subclass `BaseChatModel`, copy the tool list in `bind_tools`, copy the messages in `_generate`, return a canned reply. The whole agent graph executes (all middleware included), but nothing leaves the machine.
+
+```python
+class Spy(BaseChatModel):
+    @property
+    def _llm_type(self): return "spy"
+    def bind_tools(self, tools, **kw):
+        CAP["tools"] = [t.name for t in tools]
+        return self
+    def _generate(self, messages, stop=None, run_manager=None, **kw):
+        CAP["msgs"] = list(messages)
+        return ChatResult(generations=[ChatGeneration(message=AIMessage(content="done"))])
+```
+
+I think this is worth more than one successful API round-trip: **it decouples the agent framework from the model service entirely.** For debugging any LangChain-family agent, check "what did I actually send" with this first, then spend money on the real model.
+
 ---
 
 *All API keys and server addresses in this document are replaced with placeholders.*
