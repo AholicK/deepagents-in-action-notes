@@ -3,6 +3,7 @@
 跟 [datawhalechina/deepagents-in-action](https://github.com/datawhalechina/deepagents-in-action) 课程 **pre01–pre02 + ch01–ch02** 的完整实录：环境搭建、命令解析、踩坑排查、Trace 瓶颈分析、三层架构源码核对。
 
 > English version: [README.en.md](README.en.md)
+> **想一次读完 ch01–ch02？看单篇合订版：[notes/ch01-ch02-notes.md](notes/ch01-ch02-notes.md)**
 
 ## 环境
 
@@ -27,6 +28,7 @@
 ├── notes/
 │   ├── pre01-agentseek-create.md    环境 → 建项目 → 装依赖 → 跑通
 │   ├── pre02-agentseek-skills.md    装编码助手技能 → Trace 实操
+│   ├── ch01-ch02-notes.md           ⭐ 单篇合订版（一次读完 ch01+ch02）
 │   ├── ch01-agent-harness.md        三层架构 + 源码级核对（图节点/中间件顺序）
 │   ├── ch02-quickstart.md           第一个 Agent + 三要素→JSON Schema 实测
 │   └── troubleshooting.md           4 个真实故障与修法
