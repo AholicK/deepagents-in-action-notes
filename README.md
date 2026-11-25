@@ -1,6 +1,6 @@
 # DeepAgents in Action · 学习笔记
 
-跟 [datawhalechina/deepagents-in-action](https://github.com/datawhalechina/deepagents-in-action) 课程 **pre01–pre02 + ch01–ch03** 的完整实录：环境搭建、命令解析、踩坑排查、Trace 瓶颈分析、三层架构源码核对、虚拟文件系统四种后端实测。
+跟 [datawhalechina/deepagents-in-action](https://github.com/datawhalechina/deepagents-in-action) 课程 **pre01–pre02 + ch01–ch04** 的完整实录：环境搭建、命令解析、踩坑排查、Trace 瓶颈分析、三层架构源码核对、虚拟文件系统实测、任务规划与清单流转。
 
 > English version: [README.en.md](README.en.md)
 > **想一次读完 ch01–ch02？看单篇合订版：[notes/ch01-ch02-notes.md](notes/ch01-ch02-notes.md)**
@@ -31,6 +31,7 @@
 │   ├── pre02-agentseek-skills.md    装编码助手技能 → Trace 实操
 │   ├── ch01-ch02-notes.md           ⭐ 单篇合订版（一次读完 ch01+ch02）
 │   ├── ch03-virtual-filesystem.md   ⭐ ch03 单篇合订版（文件系统 + 四种后端实测）
+│   ├── ch04-task-planning.md        ⭐ ch04 单篇合订版（write_todos + 清单流转 + 复盘）
 │   ├── ch01-agent-harness.md        三层架构 + 源码级核对（图节点/中间件顺序）
 │   ├── ch02-quickstart.md           第一个 Agent + 三要素→JSON Schema 实测
 │   └── troubleshooting.md           4 个真实故障与修法
@@ -42,6 +43,13 @@
 │   ├── exp2b_trace.py               带 LangSmith tracing 的卸载实验
 │   ├── exp3_backends.py             四种后端对比（8 个断言）
 │   └── results/                     每次运行的 JSON 原始结果
+├── experiments/ch04/                ch04 实验代码 + 原始结果 JSON
+│   ├── common.py                    模型/搜索/清单流转记录器
+│   ├── 01_probe_middleware.py       开关对比（Spy 模型，零成本）
+│   ├── 02_run_planning.py           5 步任务 + 清单时间线
+│   ├── 03_run_harness_report.py     官方示例 + Trace + 自动复盘
+│   ├── 03b_fix_trace.py             补查 trace + 实体级覆盖检查
+│   └── 0*.json                      每次运行的原始结果
 ├── notes-en/                        对应英文版
 ├── trace/
 │   └── trace-analysis.md            313s trace 的瓶颈分析（含数据）
@@ -74,12 +82,24 @@
 | `StateBackend` 同 thread 换 agent 能读，新 thread `File not found`；`StoreBackend + InMemoryStore` 跨 thread 能读、换实例读不到 | exp3 四种后端 8 个断言 |
 | `grep(count)` 1500 个匹配只回 **1000** + 一句 Note，**数字不是真实总数** | exp1b 边界实测 |
 
+## ch04 的 6 个硬结论（实测，非转述）
+
+| 结论 | 证据 |
+|---|---|
+| 默认 8 工具、无 `write_todos`；加 `TodoListMiddleware` = **9 工具 + 1372 字符 system + `todos` 状态字段** | Spy 模型对比，`experiments/ch04/01_probe_result.json` |
+| **工具存在 ≠ 会用**：3 步任务 `deepseek-v4.1-flash` 一次 `write_todos` 都没调（`todos=[]`）；5 步任务 + 硬规则才规划 | 02 两版运行对比 |
+| 第一次写清单**不是「全 pending」**：第 1 项直接 `in_progress` | 任务① t=11.6 s、任务② t=8.0 s 两次都是 |
+| 内置提示词要求「`write_todos` 串行调用」+「最终答案写在最后一次调用之后」→ 打勾是**批量**的、最后一项常停在 `in_progress` | 1372 字符原文 + 任务①时间线 |
+| 清单闭合**不稳定**：任务① 末项停在 `in_progress`，任务② 5/5 全 `completed`（同模型同类任务） | 两次运行 `final_todos` |
+| **82% 时间在 LLM**：7 次调用 83.1 s / 总 101.1 s；搜索 12 次不是瓶颈 | LangSmith trace `01a21180-…` |
+
 ## 关键成果
 
 - 跑通 **3 次**完整深度研究，产出 3 份报告（1.1–1.3 万字，均带编号引用）
 - LangSmith trace：**313.49s / 46 次 LLM 调用 / 61 次工具调用**
 - 定位并修复模板 **2 个真实缺陷**（state 膨胀、run 状态不回收）
 - 源码级核对 ch01–ch02 的 6 个可验证断言，**全部与本地 0.7.8 一致**（默认模型 / 默认提示词 / 默认工具数 / 中间件顺序 / 参数总数 / `execute` 为何缺席）
+- ch04 跑通 **2 次**多步研究（77.3s / 101.1s），逐步记录清单时间线；把 `write_todos` 的 5 条说明书指令与 4 种实际现象一一对上
 
 ## 一句话速查：4 个坑
 

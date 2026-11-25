@@ -1,0 +1,72 @@
+{
+  "env": {
+    "deepagents": "0.7.8",
+    "langchain": "1.4.3",
+    "langgraph": "1.2.14"
+  },
+  "default": {
+    "label": "default",
+    "tool_count": 8,
+    "tools": [
+      "ls",
+      "read_file",
+      "write_file",
+      "edit_file",
+      "delete",
+      "glob",
+      "grep",
+      "task"
+    ],
+    "has_write_todos": false,
+    "system_chars": 0,
+    "system_head": "",
+    "run_state_keys": [
+      "files",
+      "messages"
+    ],
+    "schema_props": [
+      "files",
+      "messages",
+      "structured_response"
+    ],
+    "schema_has_todos": false
+  },
+  "with_todo": {
+    "label": "with_todo",
+    "tool_count": 9,
+    "tools": [
+      "ls",
+      "read_file",
+      "write_file",
+      "edit_file",
+      "delete",
+      "glob",
+      "grep",
+      "task",
+      "write_todos"
+    ],
+    "has_write_todos": true,
+    "system_chars": 1372,
+    "system_head": "\n\n## `write_todos`\n\nYou have access to the `write_todos` tool to help you manage and plan complex objectives.\nUse this tool for complex objectives to ensure tha",
+    "run_state_keys": [
+      "files",
+      "messages"
+    ],
+    "schema_props": [
+      "files",
+      "messages",
+      "structured_response",
+      "todos"
+    ],
+    "schema_has_todos": true
+  },
+  "diff": {
+    "tools_added": [
+      "write_todos"
+    ],
+    "system_chars_delta": 1372,
+    "schema_props_delta": [
+      "todos"
+    ]
+  }
+}
