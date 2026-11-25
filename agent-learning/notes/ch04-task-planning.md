@@ -3,7 +3,7 @@
 > 环境：WSL2 Ubuntu 26.04.1 ｜ deepagents **0.7.8** / langchain **1.4.3** / langgraph **1.2.14**
 > 模型：`deepseek-v4-pro`（主实验）、`deepseek-v4.1-flash`（对照）
 > 搜索：Tavily（每次 3 条结果）
-> 数据：本仓库 `experiments/ch04/*.json`，全部为本地真实运行，无手写数字
+> 数据：本仓库 `agent-learning/experiments/ch04/*.json`，全部为本地真实运行，无手写数字
 > 打卡对应：Task4 ① 显式启用规划 ② 小型研究文档 Agent + Trace ③ 问题复盘
 
 ---

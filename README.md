@@ -3,8 +3,8 @@
 跟 [datawhalechina/deepagents-in-action](https://github.com/datawhalechina/deepagents-in-action) 课程 **pre01–pre02 + ch01–ch04** 的完整实录：环境搭建、命令解析、踩坑排查、Trace 瓶颈分析、三层架构源码核对、虚拟文件系统实测、任务规划与清单流转。
 
 > English version: [README.en.md](README.en.md)
-> **想一次读完 ch01–ch02？看单篇合订版：[notes/ch01-ch02-notes.md](notes/ch01-ch02-notes.md)**
-> **ch03（虚拟文件系统 / 四种后端）单篇合订版：[notes/ch03-virtual-filesystem.md](notes/ch03-virtual-filesystem.md)**
+> **想一次读完 ch01–ch02？看单篇合订版：[agent-learning/notes/ch01-ch02-notes.md](agent-learning/notes/ch01-ch02-notes.md)**
+> **ch03（虚拟文件系统 / 四种后端）单篇合订版：[agent-learning/notes/ch03-virtual-filesystem.md](agent-learning/notes/ch03-virtual-filesystem.md)**
 
 ## 环境
 
@@ -26,40 +26,45 @@
 ## 目录
 
 ```
-├── notes/
-│   ├── pre01-agentseek-create.md    环境 → 建项目 → 装依赖 → 跑通
-│   ├── pre02-agentseek-skills.md    装编码助手技能 → Trace 实操
-│   ├── ch01-ch02-notes.md           ⭐ 单篇合订版（一次读完 ch01+ch02）
-│   ├── ch03-virtual-filesystem.md   ⭐ ch03 单篇合订版（文件系统 + 四种后端实测）
-│   ├── ch04-task-planning.md        ⭐ ch04 单篇合订版（write_todos + 清单流转 + 复盘）
-│   ├── ch01-agent-harness.md        三层架构 + 源码级核对（图节点/中间件顺序）
-│   ├── ch02-quickstart.md           第一个 Agent + 三要素→JSON Schema 实测
-│   └── troubleshooting.md           4 个真实故障与修法
-├── experiments/ch03/                ch03 全部实验代码 + 原始结果 JSON
-│   ├── _scripted.py                 ScriptedChatModel（按剧本调工具，零 token）
-│   ├── exp1_tools.py                7 个工具全跑 + files 变化轨迹
-│   ├── exp1b_edges.py               5 个 v0.7 边界（空结果/1000 上限/覆盖写/越界）
-│   ├── exp2_eviction.py             大结果卸载 + 读回 + 对照组
-│   ├── exp2b_trace.py               带 LangSmith tracing 的卸载实验
-│   ├── exp3_backends.py             四种后端对比（8 个断言）
-│   └── results/                     每次运行的 JSON 原始结果
-├── experiments/ch04/                ch04 实验代码 + 原始结果 JSON
-│   ├── common.py                    模型/搜索/清单流转记录器
-│   ├── 01_probe_middleware.py       开关对比（Spy 模型，零成本）
-│   ├── 02_run_planning.py           5 步任务 + 清单时间线
-│   ├── 03_run_harness_report.py     官方示例 + Trace + 自动复盘
-│   ├── 03b_fix_trace.py             补查 trace + 实体级覆盖检查
-│   └── 0*.json                      每次运行的原始结果
-├── notes-en/                        对应英文版
-├── trace/
-│   └── trace-analysis.md            313s trace 的瓶颈分析（含数据）
-├── feedback/
-│   ├── 学习心得.md
-│   ├── learning-reflections.en.md
-│   ├── 课程内容反馈.md
-│   └── course-feedback.en.md
-└── assets/                          截图（可选）
+├── README.md / README.en.md        中 / 英 说明
+├── LICENSE
+└── agent-learning/                 ← 全部学习内容都在这一个文件夹里
+    ├── notes/                      中文笔记（pre01 → ch04）
+    │   ├── pre01-agentseek-create.md    环境 → 建项目 → 装依赖 → 跑通
+    │   ├── pre02-agentseek-skills.md    装编码助手技能 → Trace 实操
+    │   ├── ch01-ch02-notes.md           ⭐ 单篇合订版（一次读完 ch01+ch02）
+    │   ├── ch03-virtual-filesystem.md   ⭐ ch03 单篇合订版（文件系统 + 四种后端实测）
+    │   ├── ch04-task-planning.md        ⭐ ch04 单篇合订版（write_todos + 清单流转 + 复盘）
+    │   ├── ch01-agent-harness.md        三层架构 + 源码级核对（图节点/中间件顺序）
+    │   ├── ch02-quickstart.md           第一个 Agent + 三要素→JSON Schema 实测
+    │   └── troubleshooting.md           4 个真实故障与修法
+    ├── experiments/               实验代码 + 原始结果 JSON（课程项目 experiments/ 的镜像副本）
+    │   ├── ch03/
+    │   │   ├── _scripted.py             ScriptedChatModel（按剧本调工具，零 token）
+    │   │   ├── exp1_tools.py            7 个工具全跑 + files 变化轨迹
+    │   │   ├── exp1b_edges.py           5 个 v0.7 边界（空结果/1000 上限/覆盖写/越界）
+    │   │   ├── exp2_eviction.py         大结果卸载 + 读回 + 对照组
+    │   │   ├── exp2b_trace.py           带 LangSmith tracing 的卸载实验
+    │   │   ├── exp3_backends.py         四种后端对比（8 个断言）
+    │   │   └── results/                 每次运行的 JSON 原始结果
+    │   └── ch04/
+    │       ├── common.py                模型/搜索/清单流转记录器
+    │       ├── 01_probe_middleware.py   开关对比（Spy 模型，零成本）
+    │       ├── 02_run_planning.py       5 步任务 + 清单时间线
+    │       ├── 03_run_harness_report.py 官方示例 + Trace + 自动复盘
+    │       ├── 03b_fix_trace.py         补查 trace + 实体级覆盖检查
+    │       └── 0*.json                  每次运行的原始结果
+    ├── notes-en/                   对应英文版
+    ├── trace/
+    │   └── trace-analysis.md            313s trace 的瓶颈分析（含数据）
+    └── feedback/
+        ├── 学习心得.md
+        ├── learning-reflections.en.md
+        ├── 课程内容反馈.md
+        └── course-feedback.en.md
 ```
+
+> `experiments/` 里的脚本「跑法」注释按课程项目 `research_deepagent/experiments/...` 写，本仓库是镜像副本，代码与结果 JSON 与课程项目一致。
 
 ## ch01–ch02 的 5 个硬结论（实测，非转述）
 
@@ -86,7 +91,7 @@
 
 | 结论 | 证据 |
 |---|---|
-| 默认 8 工具、无 `write_todos`；加 `TodoListMiddleware` = **9 工具 + 1372 字符 system + `todos` 状态字段** | Spy 模型对比，`experiments/ch04/01_probe_result.json` |
+| 默认 8 工具、无 `write_todos`；加 `TodoListMiddleware` = **9 工具 + 1372 字符 system + `todos` 状态字段** | Spy 模型对比，`agent-learning/experiments/ch04/01_probe_result.json` |
 | **工具存在 ≠ 会用**：3 步任务 `deepseek-v4.1-flash` 一次 `write_todos` 都没调（`todos=[]`）；5 步任务 + 硬规则才规划 | 02 两版运行对比 |
 | 第一次写清单**不是「全 pending」**：第 1 项直接 `in_progress` | 任务① t=11.6 s、任务② t=8.0 s 两次都是 |
 | 内置提示词要求「`write_todos` 串行调用」+「最终答案写在最后一次调用之后」→ 打勾是**批量**的、最后一项常停在 `in_progress` | 1372 字符原文 + 任务①时间线 |
@@ -110,7 +115,7 @@
 | 又卡（这次放后台） | Chrome 冻结后台标签，SSE 被挂起 | 保持前台标签 |
 | `npm ERR! ... 'edgesOut'` | npm 9.2.0 解 peer 依赖 bug | 升 npm 11 |
 
-详细排查过程见 [notes/troubleshooting.md](notes/troubleshooting.md)。
+详细排查过程见 [agent-learning/notes/troubleshooting.md](agent-learning/notes/troubleshooting.md)。
 
 ## 判断「卡死」的三条命令
 

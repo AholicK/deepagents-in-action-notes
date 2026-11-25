@@ -1,6 +1,6 @@
 # DeepAgents in Action · Study Notes
 
-A complete record of following the [datawhalechina/deepagents-in-action](https://github.com/datawhalechina/deepagents-in-action) course, **pre01–pre02 + ch01–ch02**: environment setup, command breakdowns, troubleshooting, trace bottleneck analysis, and source-level verification of the three-layer architecture.
+A complete record of following the [datawhalechina/deepagents-in-action](https://github.com/datawhalechina/deepagents-in-action) course, **pre01–pre02 + ch01–ch04**: environment setup, command breakdowns, troubleshooting, trace bottleneck analysis, and source-level verification of the three-layer architecture.
 
 > 中文版: [README.md](README.md)
 
@@ -24,19 +24,26 @@ A complete record of following the [datawhalechina/deepagents-in-action](https:/
 ## Layout
 
 ```
-├── notes/                            Chinese notes
-│   ├── pre01-agentseek-create.md
-│   ├── pre02-agentseek-skills.md
-│   ├── ch01-agent-harness.md         three-layer stack + source-level checks
-│   ├── ch02-quickstart.md            first agent + schema translation measured
-│   └── troubleshooting.md
-├── notes-en/                         English notes
-├── trace/
-│   └── trace-analysis.md             bottleneck analysis of the 313s trace
-├── feedback/
-│   ├── 学习心得.md / learning-reflections.en.md
-│   └── 课程内容反馈.md / course-feedback.en.md
-└── assets/
+├── README.md / README.en.md         Chinese / English docs
+├── LICENSE
+└── agent-learning/                  every study artifact lives in this one folder
+    ├── notes/                       Chinese notes (pre01 → ch04)
+    │   ├── pre01-agentseek-create.md
+    │   ├── pre02-agentseek-skills.md
+    │   ├── ch01-agent-harness.md         three-layer stack + source-level checks
+    │   ├── ch02-quickstart.md            first agent + schema translation measured
+    │   ├── ch03-virtual-filesystem.md    virtual filesystem + four backends (measured)
+    │   ├── ch04-task-planning.md         write_todos + todo-list lifecycle (measured)
+    │   └── troubleshooting.md
+    ├── experiments/                code + raw result JSON (mirror of the course project)
+    │   ├── ch03/
+    │   └── ch04/
+    ├── notes-en/                   English notes
+    ├── trace/
+    │   └── trace-analysis.md             bottleneck analysis of the 313s trace
+    └── feedback/
+        ├── 学习心得.md / learning-reflections.en.md
+        └── 课程内容反馈.md / course-feedback.en.md
 ```
 
 ## Five hard findings from ch01–ch02 (measured, not quoted)
@@ -65,7 +72,7 @@ A complete record of following the [datawhalechina/deepagents-in-action](https:/
 | Freezes again (this time in a background tab) | Chrome freezes background tabs, SSE suspended | Keep the tab in the foreground |
 | `npm ERR! ... 'edgesOut'` | npm 9.2.0 peer-dependency resolver bug | Upgrade to npm 11 |
 
-Full diagnosis in [notes-en/troubleshooting.md](notes-en/troubleshooting.md).
+Full diagnosis in [agent-learning/notes-en/troubleshooting.md](agent-learning/notes-en/troubleshooting.md).
 
 ## Three commands to tell whether it's really stuck
 

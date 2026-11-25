@@ -1,7 +1,7 @@
 # DeepAgents in Action · ch03 学习笔记（单篇合订）
 
 > 覆盖 **Lec 04 虚拟文件系统与上下文管理** + **Lec 05 可插拔存储后端**。
-> 全部结论在 `deepagents 0.7.8` 上实测，代码在 [`experiments/ch03/`](../experiments/ch03/)，原始结果在 `experiments/ch03/results/*.json`。
+> 全部结论在 `deepagents 0.7.8` 上实测，代码在 [`agent-learning/experiments/ch03/`](../experiments/ch03/)，原始结果在 `agent-learning/experiments/ch03/results/*.json`。
 > 环境：WSL2 Ubuntu 26.04.1 / Python 3.13.18 / deepagents 0.7.8 / langgraph 1.2.14 / langchain-core 1.6.7。
 
 ---
