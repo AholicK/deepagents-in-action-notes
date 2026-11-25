@@ -1,0 +1,21 @@
+{
+  "实验": "exp2 大结果自动卸载",
+  "原始大结果字符数": 147999,
+  "估算 token 数(÷4)": 36999,
+  "默认卸载阈值 token": 20000,
+  "A_卸载后返回字符数": 1411,
+  "A_是否被卸载": true,
+  "A_卸载后前 900 字符": "Tool result too large, the result of this tool call c1 was saved in the filesystem at this path: /large_tool_results/c1\n\nYou can read the result from the filesystem by using the read_file tool, but make sure to only read part of the result at a time.\n\nYou can do this by specifying an offset and limit in the read_file tool call. For example, to read the first 100 lines, you can use the read_file tool with offset=0 and limit=100.\n\nHere is a preview showing the head and tail of the result (lines of the form `... [N lines truncated] ...` indicate omitted lines in the middle of the content):\n\n1  line 00000 | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\n2  line 00001 | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\n3  line 00002 | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\n4  line 00003 | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+  "A_卸载落盘路径": "/large_tool_results/c1",
+  "A_state 里的 files": [
+    "/large_tool_results/c1"
+  ],
+  "A_预览里是否出现截断标记": true,
+  "B_读回成功": true,
+  "B_读回内容前 300 字符": "1  line 00000 | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\n2  line 00001 | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\n3  line 00002 | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\n4  line 00003 | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+  "C_对照组 read_file 返回字符数": 79930,
+  "C_对照组是否被卸载": false,
+  "C_对照组是否读到全文": false,
+  "C_对照组尾部 400 字符": "as truncated due to size limits. The file content is very large. Consider reformatting the file to make it easier to navigate. For example, if this is JSON, use execute(command='jq . /big/raw.md') to pretty-print it with line breaks. For other formats, you can use appropriate formatting tools to split long lines.]\n\n[Read 994 lines (lines 1-994 of 2000 total). 1006 lines remaining from offset 994.]",
+  "C_对照组说明": "read_file 在豁免名单里，不会被卸载成文件引用；但它用同一个 20000 token 预算（=80000 字符）做原地分页截断，返回的是截断提示 + next_offset，不是全文。"
+}

@@ -1,0 +1,33 @@
+{
+  "实验": "exp3 四种 Backend 对比",
+  "场景": {
+    "1_StateBackend": {
+      "存哪": "LangGraph agent state 的 files 键（内存/checkpointer）",
+      "同 thread 换 agent 实例能读到": true,
+      "同 thread 读回内容": "1  state 里的 hello",
+      "新 thread 能读到": false,
+      "新 thread 读回内容": "Error: File '/memo.txt' not found"
+    },
+    "2_FilesystemBackend": {
+      "存哪": "真磁盘：/tmp/ch03_fs_root",
+      "磁盘上文件存在": true,
+      "磁盘上文件内容": "磁盘上的 hello",
+      "新 thread 新实例能读到": true,
+      "新 thread 读回内容": "1  磁盘上的 hello"
+    },
+    "3_StoreBackend": {
+      "存哪": "LangGraph BaseStore（这里用 InMemoryStore，生产换持久化实现）",
+      "跨 thread 能读到": true,
+      "跨 thread 读回内容": "1  store 里的 hello",
+      "换一个新 Store 实例(模拟重启)能读到": false,
+      "换新 Store 读回内容": "Error: File '/memo.txt' not found"
+    },
+    "4_CompositeBackend": {
+      "规则": "default=StateBackend，/memories/ 前缀走 StoreBackend",
+      "新 thread 读 /workspace/plan.md（State 路由）": "Error: File '/workspace/plan.md' not found",
+      "新 thread 读 /memories/pref.txt（Store 路由）": "1  长期偏好",
+      "State 路由的文件跨线程丢了": true,
+      "Store 路由的文件跨线程还在": true
+    }
+  }
+}

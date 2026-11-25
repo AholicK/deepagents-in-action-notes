@@ -1,0 +1,29 @@
+{
+  "实验": "exp1b v0.7 边界实测",
+  "1_空_ls": "No files found",
+  "1_空_glob": "No files found",
+  "2_grep_1": {
+    "模式": "files_with_matches",
+    "返回": "/proj/a.py\n/proj/b.py\n/proj/c.md"
+  },
+  "2_grep_2": {
+    "模式": "content",
+    "返回": "/proj/a.py:\n  1: def create_agent():\n/proj/b.py:\n  1: def create_agent():\n/proj/c.md:\n  1: create_agent 在文档里也出现了一次"
+  },
+  "2_grep_3": {
+    "模式": "count",
+    "返回": "/proj/a.py: 1\n/proj/b.py: 1\n/proj/c.md: 1"
+  },
+  "2_grep_4": {
+    "模式": "content+glob",
+    "返回": "/proj/a.py:\n  4: # TODO: 加日志\n/proj/b.py:\n  4: # TODO: 补测试"
+  },
+  "3_1500个匹配_count": "/big/many.txt: 1000\n\nNote: the search stopped early (it hit its time limit or the maximum match count). The matches above are valid but incomplete. Narrow the search (a more specific pattern or a narrower path), or raise max_count, to see the rest.",
+  "3_1500个匹配_files": "/big/many.txt\n\nNote: the search stopped early (it hit its time limit or the maximum match count). The matches above are valid but incomplete. Narrow the search (a more specific pattern or a narrower path), or raise max_count, to see the rest.",
+  "4_覆盖写_第二次返回": "Updated file /ov.txt",
+  "4_覆盖写_读回内容": "1  只有一行",
+  "5_越界_1_read_file": "1  root 内的文件",
+  "5_越界_2_read_file": "Error: Path traversal not allowed: /../ch03_outside_secret.txt",
+  "5_越界_3_write_file": "Error: Path traversal not allowed: /../ch03_escape.txt",
+  "5_越界文件是否被创建": false
+}

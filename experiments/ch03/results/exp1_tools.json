@@ -1,0 +1,168 @@
+{
+  "实验": "exp1 七个内置文件工具",
+  "默认绑定工具": [
+    "ls",
+    "read_file",
+    "write_file",
+    "edit_file",
+    "delete",
+    "glob",
+    "grep",
+    "task"
+  ],
+  "工具数量": 8,
+  "步骤": [
+    {
+      "工具": "write_file",
+      "入参": {
+        "file_path": "/notes/task3.md",
+        "content": "# Task3 实验笔记\n\n## 虚拟文件系统\nAgent 不把所有信息塞进 prompt，而是把资料存进文件、按需读取、搜索定位。\n\n## 三个后端\n- StateBackend：草稿纸，文件活在 state 里\n- FilesystemBackend：真磁盘，落盘就能被别人看到\n- StoreBackend：跨会话记忆库，换线程还在\n\n## 待办\nTODO: 补一张后端对比表\n"
+      },
+      "返回": "Updated file /notes/task3.md",
+      "返回长度": 28
+    },
+    {
+      "工具": "read_file",
+      "入参": {
+        "file_path": "/notes/task3.md"
+      },
+      "返回": " 1  # Task3 实验笔记\n 2  \n 3  ## 虚拟文件系统\n 4  Agent 不把所有信息塞进 prompt，而是把资料存进文件、按需读取、搜索定位。\n 5  \n 6  ## 三个后端\n 7  - StateBackend：草稿纸，文件活在 state 里\n 8  - FilesystemBackend：真磁盘，落盘就能被别人看到\n 9  - StoreBackend：跨会话记忆库，换线程还在\n10  \n11  ## 待办\n12  TODO: 补一张后端对比表",
+      "返回长度": 239
+    },
+    {
+      "工具": "edit_file",
+      "入参": {
+        "file_path": "/notes/task3.md",
+        "old_string": "TODO: 补一张后端对比表",
+        "new_string": "TODO: 已完成（见 exp3_backends.py）"
+      },
+      "返回": "Successfully replaced 1 instance(s) of the string in '/notes/task3.md'",
+      "返回长度": 70
+    },
+    {
+      "工具": "grep",
+      "入参": {
+        "pattern": "Backend",
+        "output_mode": "content"
+      },
+      "返回": "/notes/task3.md:\n  7: - StateBackend：草稿纸，文件活在 state 里\n  8: - FilesystemBackend：真磁盘，落盘就能被别人看到\n  9: - StoreBackend：跨会话记忆库，换线程还在",
+      "返回长度": 125
+    },
+    {
+      "工具": "glob",
+      "入参": {
+        "pattern": "**/*.md"
+      },
+      "返回": "['/notes/task3.md']",
+      "返回长度": 19
+    },
+    {
+      "工具": "ls",
+      "入参": {
+        "path": "/notes"
+      },
+      "返回": "['/notes/task3.md']",
+      "返回长度": 19
+    },
+    {
+      "工具": "delete",
+      "入参": {
+        "file_path": "/notes/task3.md"
+      },
+      "返回": "Deleted /notes/task3.md",
+      "返回长度": 23
+    }
+  ],
+  "files 变化轨迹": [
+    {
+      "消息数": 1,
+      "files": []
+    },
+    {
+      "消息数": 2,
+      "files": []
+    },
+    {
+      "消息数": 3,
+      "files": [
+        "/notes/task3.md"
+      ]
+    },
+    {
+      "消息数": 4,
+      "files": [
+        "/notes/task3.md"
+      ]
+    },
+    {
+      "消息数": 5,
+      "files": [
+        "/notes/task3.md"
+      ]
+    },
+    {
+      "消息数": 6,
+      "files": [
+        "/notes/task3.md"
+      ]
+    },
+    {
+      "消息数": 7,
+      "files": [
+        "/notes/task3.md"
+      ]
+    },
+    {
+      "消息数": 8,
+      "files": [
+        "/notes/task3.md"
+      ]
+    },
+    {
+      "消息数": 9,
+      "files": [
+        "/notes/task3.md"
+      ]
+    },
+    {
+      "消息数": 10,
+      "files": [
+        "/notes/task3.md"
+      ]
+    },
+    {
+      "消息数": 11,
+      "files": [
+        "/notes/task3.md"
+      ]
+    },
+    {
+      "消息数": 12,
+      "files": [
+        "/notes/task3.md"
+      ]
+    },
+    {
+      "消息数": 13,
+      "files": [
+        "/notes/task3.md"
+      ]
+    },
+    {
+      "消息数": 14,
+      "files": [
+        "/notes/task3.md"
+      ]
+    },
+    {
+      "消息数": 15,
+      "files": []
+    },
+    {
+      "消息数": 16,
+      "files": []
+    }
+  ],
+  "最终回答": "七个工具都跑完了。",
+  "state 里的 files 键": []
+}

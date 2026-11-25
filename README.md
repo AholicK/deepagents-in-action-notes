@@ -1,9 +1,10 @@
 # DeepAgents in Action · 学习笔记
 
-跟 [datawhalechina/deepagents-in-action](https://github.com/datawhalechina/deepagents-in-action) 课程 **pre01–pre02 + ch01–ch02** 的完整实录：环境搭建、命令解析、踩坑排查、Trace 瓶颈分析、三层架构源码核对。
+跟 [datawhalechina/deepagents-in-action](https://github.com/datawhalechina/deepagents-in-action) 课程 **pre01–pre02 + ch01–ch03** 的完整实录：环境搭建、命令解析、踩坑排查、Trace 瓶颈分析、三层架构源码核对、虚拟文件系统四种后端实测。
 
 > English version: [README.en.md](README.en.md)
 > **想一次读完 ch01–ch02？看单篇合订版：[notes/ch01-ch02-notes.md](notes/ch01-ch02-notes.md)**
+> **ch03（虚拟文件系统 / 四种后端）单篇合订版：[notes/ch03-virtual-filesystem.md](notes/ch03-virtual-filesystem.md)**
 
 ## 环境
 
@@ -29,9 +30,18 @@
 │   ├── pre01-agentseek-create.md    环境 → 建项目 → 装依赖 → 跑通
 │   ├── pre02-agentseek-skills.md    装编码助手技能 → Trace 实操
 │   ├── ch01-ch02-notes.md           ⭐ 单篇合订版（一次读完 ch01+ch02）
+│   ├── ch03-virtual-filesystem.md   ⭐ ch03 单篇合订版（文件系统 + 四种后端实测）
 │   ├── ch01-agent-harness.md        三层架构 + 源码级核对（图节点/中间件顺序）
 │   ├── ch02-quickstart.md           第一个 Agent + 三要素→JSON Schema 实测
 │   └── troubleshooting.md           4 个真实故障与修法
+├── experiments/ch03/                ch03 全部实验代码 + 原始结果 JSON
+│   ├── _scripted.py                 ScriptedChatModel（按剧本调工具，零 token）
+│   ├── exp1_tools.py                7 个工具全跑 + files 变化轨迹
+│   ├── exp1b_edges.py               5 个 v0.7 边界（空结果/1000 上限/覆盖写/越界）
+│   ├── exp2_eviction.py             大结果卸载 + 读回 + 对照组
+│   ├── exp2b_trace.py               带 LangSmith tracing 的卸载实验
+│   ├── exp3_backends.py             四种后端对比（8 个断言）
+│   └── results/                     每次运行的 JSON 原始结果
 ├── notes-en/                        对应英文版
 ├── trace/
 │   └── trace-analysis.md            313s trace 的瓶颈分析（含数据）
@@ -52,6 +62,17 @@
 | 默认 system prompt **只有你写的那句**（传 `"test"` → 收到 4 字符） | 用 Spy 模型截 `_generate` 的 messages |
 | 加 `TodoListMiddleware` = **+1 工具 +1372 字符 system** | 开关前后对比，4 → 1376 |
 | 工具三要素会被翻译成 JSON Schema，`Literal` → `enum`（硬锁） | `convert_to_openai_tool()` 输出 |
+
+## ch03 的 6 个硬结论（实测，非转述）
+
+| 结论 | 证据 |
+|---|---|
+| 卸载阈值 20,000 tokens = **精确 80,000 字符**（`NUM_CHARS_PER_TOKEN = 4`） | 源码常量 + 触发点实测 |
+| 一次真实卸载：工具返回 **150,165 字符** → 模型实收 **2,389 字符**，压缩 **62.9 倍** | LangSmith trace 两个 run 对比 |
+| 7 个内置工具**全在**卸载豁免名单，但 `read_file` 会用同一 80,000 字符预算**原地截断** | 对照组：读 2000 行只回 994 行 + `next_offset` |
+| 落盘路径是 `/large_tool_results/<tool_call_id>`，**同 id 会覆盖** | `result["files"]` 键 + trace 原文 |
+| `StateBackend` 同 thread 换 agent 能读，新 thread `File not found`；`StoreBackend + InMemoryStore` 跨 thread 能读、换实例读不到 | exp3 四种后端 8 个断言 |
+| `grep(count)` 1500 个匹配只回 **1000** + 一句 Note，**数字不是真实总数** | exp1b 边界实测 |
 
 ## 关键成果
 
